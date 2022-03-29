@@ -4,14 +4,14 @@ DOMAINNAME=""
 DOMAINDNSRECORDS=""
 EXECUTE=false # script will run "cfcli find" instead of "cfcli rm" without EXECUTE flag set
 showhelp(){
-   # Display Help
-   echo "Hi! Please specify options."
-   echo
-   echo "Syntax: fetch-domain-records.bash -d example.com [-q|h]"
-   echo "options:"
-   echo "-h     --help       Print this Help."
-   echo "-q     --quiet       Execute quietly."
-   echo
+    echo "Hi! Please specify options."
+    echo
+    echo "Syntax: fetch-domain-records.bash -d example.com [-q|h]"
+    echo "options:"
+    echo "-h    Print this usage Help."
+    echo "-q    Run quietly."
+    echo "-x    Execute after (use AFTER default dry-run)."
+    echo
 }
 while getopts "hqxd:" option; do
       case $option in
@@ -88,7 +88,6 @@ removeAllDnsRecordsFromDomain(){
     [ "$EXECUTE" = false ] && echo "No records were removed. Review the results and add the [-x] parameter to EXECUTE, if satisfied!"
 }
 removeAllDnsRecordsFromDomain
-
 # using cloudflare-cli - install with `npm install cloudflare-cli`
 # https://github.com/danielpigott/cloudflare-cli
 # https://github.com/shakes80/cloudflare-cli

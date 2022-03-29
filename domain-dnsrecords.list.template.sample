@@ -1,0 +1,6 @@
+A,stag.TEMPLATE.TLD,68.69.xxx.xxx
+A,www.TEMPLATE.TLD,68.69.xxx.xxx
+A,TEMPLATE.TLD,68.69.xxx.xxx
+MX,TEMPLATE.TLD,mail.TEMPLATE.TLD
+TXT,_dmarc.TEMPLATE.TLD,v=DMARC1; p=quarantine; rua=mailto:dmarc@TEMPLATE.TLD; ruf=mailto:dmarc@TEMPLATE.TLD; sp=quarantine
+TXT,TEMPLATE.TLD,v=spf1 a -all

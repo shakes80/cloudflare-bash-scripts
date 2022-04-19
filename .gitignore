@@ -2,3 +2,4 @@ data/*
 dnsrecords.template
 domain-dnsrecords.list.template
 domain-dnsrecords.list.xlsx
+modify-firewall-config-scripts/firewall.config.*

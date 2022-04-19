@@ -19,7 +19,7 @@ showhelp(){
 while getopts "hqxd:" option; do
     case $option in
       h) # display Help
-         showHelp
+         showhelp
          exit 1;;
       q) # quiet
          QUIET=true;;

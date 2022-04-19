@@ -4,3 +4,49 @@ A,TEMPLATE.TLD,68.69.xxx.xxx
 MX,TEMPLATE.TLD,mail.TEMPLATE.TLD
 TXT,_dmarc.TEMPLATE.TLD,v=DMARC1; p=quarantine; rua=mailto:dmarc@TEMPLATE.TLD; ruf=mailto:dmarc@TEMPLATE.TLD; sp=quarantine
 TXT,TEMPLATE.TLD,v=spf1 a -all
+
+
+A,accounting.private.sandylizardhosting.com,172.16.1.10,Auto,false,fa73e45440cc9a76025515ce25942df7
+A,cpanel.sandylizardhosting.com,68.69.185.55,Auto,false,4fbcfe6b41af14726e23cadf2df200ee
+A,crm.private.sandylizardhosting.com,172.16.1.15,Auto,false,2152d0c3764a5611051837dd311905ea
+A,debian.private.sandylizardhosting.com,172.16.1.252,Auto,false,d58332a0f0da58dc112a65eae20f6885
+A,gitlab.sandylizardhosting.com,68.69.185.57,Auto,false,2797054db5173b58fed48f8711170811
+A,kali.private.sandylizardhosting.com,172.16.1.254,Auto,false,6dc0928330c8212f199c7bdaa72d38c3
+A,keycloak.sandylizardhosting.com,68.69.185.50,Auto,false,a89b21ed30d17447eae68fe46e358eed
+A,kvm1.sandylizardhosting.com,195.179.201.227,Auto,false,927a8c93f9600c3ebbff07af4fbff27a
+A,log.private.sandylizardhosting.com,172.16.1.20,Auto,false,b243a0406be12ca160cea01bdf2e0cd8
+A,mattermost.sandylizardhosting.com,68.69.185.56,Auto,false,ed8b49d6e5d6397d2c4cb5e3bcda85fb
+A,mci1.private.sandylizardhosting.com,172.16.1.1,Auto,false,55a524523df79f87816ae2b6426df278
+A,mci1.sandylizardhosting.com,68.69.184.26,Auto,false,d98f4a5a90a26bd8c07aa53bc934eede
+A,mysql.private.sandylizardhosting.com,172.16.1.5,Auto,false,8ae396855976402690c30e65be7e14d9
+A,oldmail.sandylizardhosting.com,194.233.102.101,Auto,false,a310d32d1169d7b723f24d66560ea635
+A,oldsandbox.sandylizardhosting.com,194.233.102.16,Auto,false,7ab0225290e0b8894af7c185e0bb1e46
+A,portproxy.mci1.sandylizardhosting.com,68.69.185.62,Auto,false,d6b6ab330b9cc2e229ef857b844b22fd
+A,sandbox.sandylizardhosting.com,68.69.185.52,Auto,false,202947a07b8b33923e94a33ba2e655ee
+A,sandylizardhosting.com,68.69.185.60,Auto,false,db038411f20e70eca511151e6b828851
+A,stag1.sandylizardhosting.com,68.69.185.59,Auto,false,dc77897179eba1717e1d9fe89848c756
+A,stag.sandylizardhosting.com,68.69.185.59,Auto,false,faf256908de82053b80fd6176b40b635
+A,telecom.sandylizardhosting.com,68.69.185.58,Auto,false,bb69916358029592a3c1bf3c8e5775a5
+A,tus1.private.sandylizardhosting.com,107.2.26.236,Auto,false,6b69d2307fd950f921aff8292a3a1ca9
+A,ubuntu.private.sandylizardhosting.com,172.16.1.253,Auto,false,4e98643e520f7ade0dc59b66b0f9a43b
+A,vpnclient0.private.sandylizardhosting.com,172.16.1.190,Auto,false,ddc2cd00c95f70fec1981b6931323346
+A,vpnclient1.private.sandylizardhosting.com,172.16.1.191,Auto,false,c2b092567ac8e1205f7e8e2d74514675
+A,vpnclient2.private.sandylizardhosting.com,172.16.1.192,Auto,false,717dbcc70b52a44e2ea5ca3c1d033cef
+A,vpnclient3.private.sandylizardhosting.com,172.16.1.193,Auto,false,05d63e5570f95165d5b1aa26d1f70d57
+A,vpnclient4.private.sandylizardhosting.com,172.16.1.194,Auto,false,7a7f92cf3752c3c40157ac9448dedfe7
+A,vpnclient5.private.sandylizardhosting.com,172.16.1.195,Auto,false,a8d42079fcc19173617f7438cc1f4abf
+A,vpnclient6.private.sandylizardhosting.com,172.16.1.196,Auto,false,015df35aa599b5fb9476229abc5cfba3
+A,vpnclient7.private.sandylizardhosting.com,172.16.1.197,Auto,false,2a910f5b5bb4aaf175a04dbf98fb54f0
+A,vpnclient8.private.sandylizardhosting.com,172.16.1.198,Auto,false,83837d951b1818cc4accad82afce417a
+A,vpnclient9.private.sandylizardhosting.com,172.16.1.199,Auto,false,4afa38dcea8f5f520b9ff0eb2899da47
+A,vpn.sandylizardhosting.com,68.69.185.54,Auto,false,b0c796c8f02c8009d79f722b8a286225
+A,www1.sandylizardhosting.com,68.69.185.60,Auto,false,e32a06760e62dd5b38623354ad13bbae
+A,www2.sandylizardhosting.com,68.69.185.61,Auto,false,0a29f68e0b80803e36d7b5e43692e745
+A,www.sandylizardhosting.com,68.69.185.60,Auto,false,2e4738e7954cf9b0b7aa575650cc6350
+A,zabbix.sandylizardhosting.com,68.69.185.51,Auto,false,2cbdc4f39fedbda5279dc8c090068de7
+A,zimbra.sandylizardhosting.com,68.69.185.53,Auto,false,3b4d5c65e75926107cedd6ffb5d8a653
+CNAME,mail.sandylizardhosting.com,zimbra.sandylizardhosting.com,Auto,false,0da201baaa29213a216824b7ba773f4b
+CNAME,webmail.sandylizardhosting.com,zimbra.sandylizardhosting.com,Auto,false,4f55314f06f1ad673cfdd9c2ea4ed116
+MX,sandylizardhosting.com,mail.sandylizardhosting.com,Auto,false,df1a908a8851fcb0fdd7aa4dee1689f8
+TXT,_dmarc.sandylizardhosting.com,v=DMARC1; p=quarantine; rua=mailto:dmarc@sandylizardhosting.com; ruf=mailto:dmarc@sandylizardhosting.com; sp=quarantine,Auto,false,95ee87b3cf9bcb708d420657d20ac73b
+TXT,sandylizardhosting.com,v=spf1 a ip4:68.69.184.24/30 ip4:68.69.185.48/28 -all,Auto,false,5fbbb752343df74a9585978e6575be33

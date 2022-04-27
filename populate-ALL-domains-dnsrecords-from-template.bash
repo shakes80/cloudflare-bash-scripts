@@ -30,16 +30,9 @@ while getopts ":hq" option; do
    esac
 done
 
-fetchDomainDnsRecords(){
-    if [ $QUIET = "true" ]; then #if QUIET supress output from subcommand
-        ./fetch-domain-dnsrecords.bash -q -d $CURRENTDOMAIN &
-    else
-        ./fetch-domain-dnsrecords.bash -d $CURRENTDOMAIN &
-    fi
-    #echo "Domain complete: $CURRENTDOMAIN"
-}
 
-fetchAllDomainsDnsRecords(){
+
+populateAllDomainsDnsRecords(){
     # Populate or update the domains.list
     fetchDomainsList
     
@@ -53,12 +46,15 @@ fetchAllDomainsDnsRecords(){
     do
         CURRENTDOMAIN="$domain"
         # echo "Records for: $domain"
-        fetchDomainDnsRecords 
+        export NODE_NO_WARNINGS=1
+        
+        (bash ./remove-all-dnsrecords-from-domain.bash -d $domain -q -x ; bash ./populate-domain-dnsrecords-from-template.bash -d $domain -q -x) &
+        
         # clean up global garbage
         CURRENTDOMAIN="" 
     done
 }
-fetchAllDomainsDnsRecords
+populateAllDomainsDnsRecords
 
 # using cloudflare-cli - install with `npm install cloudflare-cli`
 # https://github.com/danielpigott/cloudflare-cli

@@ -47,7 +47,7 @@ fi
 #cfcli ls -d $DOMAINNAME -f csv | tee data/$DOMAINNAME.dnsrecords.list
 refreshDomainDnsRecords(){
     ./fetch-domain-dnsrecords.bash -q -d "$DOMAINNAME"
-    echo "$DOMAINNAME dns records refresh complete."
+    echo "[$DOMAINNAME] dns records refresh complete."
 }
 
 populateDomainDnsRecordsFromTemplate(){
@@ -56,14 +56,14 @@ populateDomainDnsRecordsFromTemplate(){
     readonly existingDomainDnsRecordsFile="data/$DOMAINNAME.dnsrecords.list" #this location is hardcoded, other scripts use it too
     readonly domainDnsRecordsListTemplate="./domain-dnsrecords.list.template"
  
-    [ "$EXECUTE" = true ] && echo "EXECUTION INITIATED" || echo "DRY RUN INITIATED" # Displaying the execution status at runtime
+    [ "$EXECUTE" = true ] && echo "[$DOMAINNAME] EXECUTION INITIATED" || echo "[$DOMAINNAME] DRY RUN INITIATED" # Displaying the execution status at runtime
     
     if [[ -f $existingDomainDnsRecordsFile ]]; then # Even if empty, the file should exist after refreshing the dnsrecords above. If empty, something is wrong.
         # echo "file exists!"
         # count the existing number of records before processing
         readonly numberOfPreexistingRecords=$(wc -l < "$existingDomainDnsRecordsFile")
         if [ "$numberOfPreexistingRecords" -ne "0" ]; then # threre are existing records for domain
-            echo "[WARNING]:$numberOfPreexistingRecords DNS Records currently exist for $DOMAINNAME:"
+            echo "[$DOMAINNAME] [WARNING]:$numberOfPreexistingRecords DNS Records currently exist for $DOMAINNAME:"
             local i=0 # counter
             while IFS="" read -r dnsRecord || [ -n "$dnsRecord" ]
             do
@@ -76,87 +76,54 @@ populateDomainDnsRecordsFromTemplate(){
                 local _content=$(echo $dnsRecord | cut -d',' -f3)
                 #echo "Content: $_content"
                 local _type=$(echo $dnsRecord | cut -d',' -f1)
-                echo "$i/$numberOfPreexistingRecords: $_type,$_name,$_content"
+                echo "[$DOMAINNAME] $i/$numberOfPreexistingRecords: $_type,$_name,$_content"
             done < $existingDomainDnsRecordsFile
-            echo "########################################################################################"
-            echo "[WARNING]: $numberOfPreexistingRecords DNS Records currently exist for $DOMAINNAME"
-            echo "[WARNING]: If you do not need the records, you can remove them:"
-            echo "[WARNING]: by running 'bash ./remove-all-dnsrecords-from-domain.bash -d $DOMAINNAME'"
-            echo "[WARNING]: for help see 'bash ./populate-domain-dnsrecords-from-template.bash -h'"
-            echo "[WARNING]: for more help see  'bash ./remove-all-dnsrecords-from-domain.bash -h'"
-            echo "[WARNING]: Beacuse the records above still exist in domain, exiting now."
-            echo "########################################################################################"
+            echo "[$DOMAINNAME] ########################################################################################"
+            echo "[$DOMAINNAME] [WARNING]: $numberOfPreexistingRecords DNS Records currently exist for $DOMAINNAME"
+            echo "[$DOMAINNAME] [WARNING]: If you do not need the records, you can remove them:"
+            echo "[$DOMAINNAME] [WARNING]: by running 'bash ./remove-all-dnsrecords-from-domain.bash -d $DOMAINNAME'"
+            echo "[$DOMAINNAME] [WARNING]: for help see 'bash ./populate-domain-dnsrecords-from-template.bash -h'"
+            echo "[$DOMAINNAME] [WARNING]: for more help see  'bash ./remove-all-dnsrecords-from-domain.bash -h'"
+            echo "[$DOMAINNAME] [WARNING]: Beacuse the records above still exist in domain, exiting now."
+            echo "[$DOMAINNAME] ########################################################################################"
             exit 1
         else # there are no existing records for the domain
-            echo "0 DNS Records currently exist for $DOMAINNAME on cloudflare"
+            echo "[$DOMAINNAME] 0 DNS Records currently exist for $DOMAINNAME on cloudflare"
             if [[ ! -f $domainDnsRecordsListTemplate ]]; then
-                echo "########################################################################################"
-                echo "[WARNING]: $domainDnsRecordsListTemplate does not exist."
-                echo "[WARNING]: for help see 'bash ./populate-domain-dnsrecords-from-template.bash -h'"
-                echo "[WARNING]: Beacuse the template odesn't exist there's noting to do, exiting now."
-                echo "########################################################################################"
+                echo "[$DOMAINNAME] ########################################################################################"
+                echo "[$DOMAINNAME] [WARNING]: $domainDnsRecordsListTemplate does not exist."
+                echo "[$DOMAINNAME] [WARNING]: for help see 'bash ./populate-domain-dnsrecords-from-template.bash -h'"
+                echo "[$DOMAINNAME] [WARNING]: Beacuse the template odesn't exist there's noting to do, exiting now."
+                echo "[$DOMAINNAME] ########################################################################################"
                 exit 1
             fi
             readonly numberOfDnsRecordsInTemplate=$(wc -l < "$domainDnsRecordsListTemplate")  
             if [ "$numberOfDnsRecordsInTemplate" -ne "0" ]; then # threre are records in the template
-                echo "$numberOfDnsRecordsInTemplate DNS records are in the template to be added to $DOMAINNAME:"
+                echo "[$DOMAINNAME] $numberOfDnsRecordsInTemplate DNS records are in the template to be added to $DOMAINNAME:"
                 local j=0 # counter
                 while IFS="" read -r dnsRecord || [ -n "$dnsRecord" ]
                 do
                     ((j=j+1))
                     #echo "************** Next Record **************************"
-                    local _name=$( echo "$(echo $dnsRecord | cut -d"," -f2)" | sed "s/TEMPLATE.TLD/$DOMAINNAME/g")
-                    #echo "Name: $_name"
-                    local _domain=$DOMAINNAME
-                    #echo "Domain: $_domain"
-                    local _content=$( echo "$(echo $dnsRecord | cut -d',' -f3)" | sed "s/TEMPLATE.TLD/$DOMAINNAME/g") 
-                    #echo "Content: $_content"
-                    local _type=$(echo $dnsRecord | cut -d',' -f1)
-                    echo "$j/$numberOfDnsRecordsInTemplate: $_type,$_name,$_content"
-
-                    case $_type in
-                        "A" | "AAAA" | "CNAME" | "NS" | "PTR" | "SOA" | "SOA" | "DNSKEY" | "DS" | "TXT" ) # standard addition to cloudflare
-                            [ "$EXECUTE" = true ] && cfcli -t "$_type" -d "$DOMAINNAME" add "$_name" "$_content" || echo "Proposed command: cfcli -t $_type -d $DOMAINNAME add $_name $_content"
-                            [[ $? -ne 0 ]] && echo "Error adding $_type record."  
-                            ;;
-                        "MX" ) # MX (Mail eXchange)
-                            #    -p  Set priority when adding a record (MX or SRV)
-                            [ "$EXECUTE" = true ] && cfcli -t "$_type" -p 10 -d "$DOMAINNAME" add "$_name" "$_content" || echo "Proposed command: cfcli -t $_type -p 10 -d $DOMAINNAME add $_name $_content"
-                            [[ $? -ne 0 ]] && echo "Error adding $_type record."
-                            ;;
-                        "SRV" ) # SRV (location of service)
-                            # Add an SRV record (then 3 numbers are priority, weight and port respectively)
-                            [ "$EXECUTE" = true ] && cfcli -t "$_type" add "$_name" "$_content" 1 1 1 "$DOMAINNAME" echo "cfcli -t $_type add $_name $_content 1 1 1 $DOMAINNAME"
-                            [[ $? -ne 0 ]] && echo "Error adding $_type record."
-                            ;;
-                        "ALIAS" | "CERT" | "PTR" | "NSEC" | "NSEC3" | "RRSIG" | "DHCID" | "DNAME" | "HINFO" | "HTTPS" |  "LOC" | "NAPTR" | "RP" | "TLSA" ) # 
-                            # Unsupported - or at least, yet to be implemented - record type
-                            echo "[SKIPPING]Unsupported record type: $j/$numberOfDnsRecordsInTemplate: $_type,$_name,$_content"
-                            [[ $? -ne 0 ]] && echo "Error adding $_type record."
-                            ;;
-                        # Unknown record type
-                        \?) # Invalid option
-                            echo "Error: unknown record type: $_type"
-                            ;;
-                    esac
+                    [ "$EXECUTE" = true ] && ./add-dns-record.bash -x -d $dnsRecord || ./add-dns-record.bash -d $dnsRecord
 
                 done < $domainDnsRecordsListTemplate
             else # there are no records in the template
-                echo "########################################################################################"
-                echo "[WARNING]: $domainDnsRecordsListTemplate exists but contains $numberOfDnsRecordsInTemplate records."
-                echo "[WARNING]: for help see 'bash ./populate-domain-dnsrecords-from-template.bash -h'"
-                echo "[WARNING]: Beacuse the template doesn't contain records, there's noting to do, exiting now."
-                echo "########################################################################################"
+                echo "[$DOMAINNAME] ########################################################################################"
+                echo "[$DOMAINNAME] [WARNING]: $domainDnsRecordsListTemplate exists but contains $numberOfDnsRecordsInTemplate records."
+                echo "[$DOMAINNAME] [WARNING]: for help see 'bash ./populate-domain-dnsrecords-from-template.bash -h'"
+                echo "[$DOMAINNAME] [WARNING]: Beacuse the template doesn't contain records, there's noting to do, exiting now."
+                echo "[$DOMAINNAME] ########################################################################################"
                 exit 1
             fi 
         fi
     else # $existingDomainDnsRecords file does not exist
-        echo "Error reading $existingDomainDnsRecordsFile, file does not exist. Exiting"
+        echo "[$DOMAINNAME] Error reading $existingDomainDnsRecordsFile, file does not exist. Exiting"
         exit 1
     fi
 
-    [ "$EXECUTE" = false ] && echo "DRY RUN COMPLETE" || echo "EXECUTION COMPLETE"
-    [ "$EXECUTE" = false ] && echo "No records were added. Review the results and add the [-x] parameter to EXECUTE, if satisfied!"
+    [ "$EXECUTE" = false ] && echo "[$DOMAINNAME] DRY RUN COMPLETE" || echo "[$DOMAINNAME] EXECUTION COMPLETE"
+    [ "$EXECUTE" = false ] && echo "[$DOMAINNAME] No records were added. Review the results and add the [-x] parameter to EXECUTE, if satisfied!"
 }
 populateDomainDnsRecordsFromTemplate
 

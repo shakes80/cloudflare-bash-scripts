@@ -49,43 +49,19 @@ removeAllDnsRecordsFromDomain(){
     # iterate through $DOMAINDNSRECORDS and remove each dnsrecord
     #echo $(cat $domainDnsRecordsFile)
     i=0
-    [ "$EXECUTE" = true ] && echo "EXECUTION INITIATED" || echo "DRY RUN INITIATED"
+    [ "$EXECUTE" = true ] && echo "[$DOMAINNAME] EXECUTION INITIATED" || echo "[$DOMAINNAME] DRY RUN INITIATED"
 
     while IFS="" read -r dnsRecord || [ -n "$dnsRecord" ]
     do
         #cfcli find -d thesandylizard.com -q name:kvm1.thesandylizard.com,content:195.179.201.227,type:A
         ((i=i+1))
-        #echo "************** Next Record **************************"
-        local _name=$(echo $dnsRecord | cut -d',' -f2)
-        #echo "Name: $_name"
-        local _domain=$DOMAINNAME
-        #echo "Domain: $_domain"
-        local _content=$(echo $dnsRecord | cut -d',' -f3)
-        #echo "Content: $_content"
-        local _type=$(echo $dnsRecord | cut -d',' -f1)
 
-        #
-        # NOTICE: Please take notice to the [ "$EXECUTE" = true ] or [ "$EXECUTE" = false ]
-        #
-        [ "$EXECUTE" = false ] && echo "____________________________________________________________________________"
-        [ "$EXECUTE" = false ] && echo "Record #$i"
-        [ "$EXECUTE" = false ] && echo "____________________________________________________________________________"
-        [ "$EXECUTE" = true ] && echo "EXECUTING REMOVE: cfcli rm $_name -d $_domain -q name:$_name,type:$_type" || echo "DRY-RUN: Substituting find for remove: cfcli find -d $_domain -q name:$_name,type:$_type"
-        [ "$EXECUTE" = false ] && echo "____________________________________________________________________________"       
-        [ "$EXECUTE" = false ] && echo "Cloudflare response:"
-        # script will run "cfcli find" instead of "cfcli rm" without EXECUTE flag set
-        
-        #
-        # NOTICE: The following makes an irreversable API call using cloudflare-cli. 
-        # These commands will remove dns records if the EXECUTE flag is set. 
-        # [ "$EXECUTE" = true ] or [ "$EXECUTE" =  ] below
-        #
-        [ "$EXECUTE" = true ] && cfcli rm $_name -d $_domain -q name:$_name,type:$_type || cfcli find -d $_domain -q name:$_name,type:$_type
-        
-        [ "$EXECUTE" = false ] && echo "____________________________________________________________________________"
+        #echo "************** Next Record **************************"
+        [ "$EXECUTE" = true ] && ./remove-dns-record.bash -x -d $dnsRecord || ./remove-dns-record.bash -d $dnsRecord
+
     done < data/$DOMAINNAME.dnsrecords.list
-    [ "$EXECUTE" = false ] && echo "DRY RUN COMPLETE" || echo "EXECUTION COMPLETE"
-    [ "$EXECUTE" = false ] && echo "No records were removed. Review the results and add the [-x] parameter to EXECUTE, if satisfied!"
+    [ "$EXECUTE" = false ] && echo "[$DOMAINNAME] DRY RUN COMPLETE" || echo "[$DOMAINNAME] EXECUTION COMPLETE"
+    [ "$EXECUTE" = false ] && echo "[$DOMAINNAME] No records were removed. Review the results and add the [-x] parameter to EXECUTE, if satisfied!"
 }
 removeAllDnsRecordsFromDomain
 # using cloudflare-cli - install with `npm install cloudflare-cli`

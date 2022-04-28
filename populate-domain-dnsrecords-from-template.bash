@@ -56,7 +56,7 @@ populateDomainDnsRecordsFromTemplate(){
     readonly existingDomainDnsRecordsFile="data/$DOMAINNAME.dnsrecords.list" #this location is hardcoded, other scripts use it too
     readonly domainDnsRecordsListTemplate="./domain-dnsrecords.list.template"
  
-    [ "$EXECUTE" = true ] && echo "[$DOMAINNAME] EXECUTION INITIATED" || echo "[$DOMAINNAME] DRY RUN INITIATED" # Displaying the execution status at runtime
+    [ "$EXECUTE" = true ] && echo "[$DOMAINNAME] KICKOFF INITIATED" || echo "[$DOMAINNAME] DRY RUN KICKOFF INITIATED" # Displaying the execution status at runtime
     
     if [[ -f $existingDomainDnsRecordsFile ]]; then # Even if empty, the file should exist after refreshing the dnsrecords above. If empty, something is wrong.
         # echo "file exists!"
@@ -68,9 +68,9 @@ populateDomainDnsRecordsFromTemplate(){
             while IFS="" read -r dnsRecord || [ -n "$dnsRecord" ]
             do
                 ((i=i+1))
-                #echo "************** Next Record **************************"
+                echo "************** Next Record **************************"
                 local _name=$(echo $dnsRecord | cut -d',' -f2)
-                #echo "Name: $_name"
+                echo "Name: $_name"
                 local _domain=$DOMAINNAME
                 #echo "Domain: $_domain"
                 local _content=$(echo $dnsRecord | cut -d',' -f3)
@@ -105,7 +105,7 @@ populateDomainDnsRecordsFromTemplate(){
                 do
                     ((j=j+1))
                     #echo "************** Next Record **************************"
-                    [ "$EXECUTE" = true ] && ./add-dns-record.bash -x -d $dnsRecord || ./add-dns-record.bash -d $dnsRecord
+                    [ "$EXECUTE" = true ] && (./add-dns-record.bash -x -d $DOMAINNAME -r "$dnsRecord" & ) || (./add-dns-record.bash -d $DOMAINNAME -r "$dnsRecord")
 
                 done < $domainDnsRecordsListTemplate
             else # there are no records in the template
@@ -122,7 +122,7 @@ populateDomainDnsRecordsFromTemplate(){
         exit 1
     fi
 
-    [ "$EXECUTE" = false ] && echo "[$DOMAINNAME] DRY RUN COMPLETE" || echo "[$DOMAINNAME] EXECUTION COMPLETE"
+    [ "$EXECUTE" = false ] && echo "[$DOMAINNAME] DRY RUN KICKOFF COMPLETE" || echo "[$DOMAINNAME] KICKOFF COMPLETE"
     [ "$EXECUTE" = false ] && echo "[$DOMAINNAME] No records were added. Review the results and add the [-x] parameter to EXECUTE, if satisfied!"
 }
 populateDomainDnsRecordsFromTemplate

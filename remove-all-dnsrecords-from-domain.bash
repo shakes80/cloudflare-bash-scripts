@@ -57,7 +57,7 @@ removeAllDnsRecordsFromDomain(){
         ((i=i+1))
 
         #echo "************** Next Record **************************"
-        [ "$EXECUTE" = true ] && ./remove-dns-record.bash -x -d $dnsRecord || ./remove-dns-record.bash -d $dnsRecord
+        [ "$EXECUTE" = true ] && (./remove-dns-record.bash -x -d $dnsRecord &) || (./remove-dns-record.bash -d $dnsRecord &)
 
     done < data/$DOMAINNAME.dnsrecords.list
     [ "$EXECUTE" = false ] && echo "[$DOMAINNAME] DRY RUN COMPLETE" || echo "[$DOMAINNAME] EXECUTION COMPLETE"

@@ -1,5 +1,6 @@
 QUIET=false
 DNSRECORD=""
+DOMAINNAME=""
 EXECUTE=false # script will run "cfcli find" instead of "cfcli rm" without EXECUTE flag set
 showhelp(){
     echo "Hi! Please specify options."
@@ -11,7 +12,7 @@ showhelp(){
     echo "-x    Execute after (use AFTER default dry-run)."
     echo
 }
-while getopts "hqxd:" option; do
+while getopts "hqxr:d:" option; do
       case $option in
       h) # display Help
          showHelp
@@ -22,9 +23,16 @@ while getopts "hqxd:" option; do
          EXECUTE=true;;
       d) # Enter a name
         if [[ ! -z "$OPTARG" ]];then
+            DOMAINNAME=$OPTARG
+        else 
+            echo "Error: Please specify a DOMAINNAME after the -d parameter."
+            exit 22
+        fi;;
+      r) # Enter a name
+        if [[ ! -z "$OPTARG" ]];then
             DNSRECORD=$OPTARG
         else 
-            echo "Error: Please specify a DNSRECORD after the -d parameter."
+            echo "Error: Please specify a DNSRECORD after the -r parameter."
             exit 22
         fi;;
      \?) # Invalid option

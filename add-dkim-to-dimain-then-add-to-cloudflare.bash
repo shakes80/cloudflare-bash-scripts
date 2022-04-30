@@ -4,7 +4,7 @@ DOMAINNAME=""
 showhelp(){
     echo "Hi! Please specify options."
     echo
-    echo "Syntax: add-dkim-to-domain-in-carbonio-then-add-to-cloudflare.bash -d example.com [-h]"
+    echo "Syntax: add-dkim-to-domain-then-add-to-cloudflare.bash -d example.com [-h]"
     echo "options:"
     echo "-h    Print this usage Help."
     echo
@@ -28,9 +28,12 @@ while getopts "hd:" option; do
 done
 
 # add dkim to domain on Carbonio/Zimbra
-ssh zero-carbonio-dmz 'sudo su - zextras -c "/opt/zextras/libexec/zmdkimkeyutil -a -d '$DOMAINNAME'"' > ./data/$DOMAINNAME.dkim.public
+ssh zero-carbonio-dmz 'sudo su - zimbra -c "/opt/zimbra/libexec/zmdkimkeyutil -a -d '$DOMAINNAME'"' > ./data/$DOMAINNAME.dkim.public
 # query dkim for domain on Carbonio/Zimbra
-ssh zero-carbonio-dmz 'sudo su - zextras -c "/opt/zextras/libexec/zmdkimkeyutil -q -d '$DOMAINNAME'"' > ./data/$DOMAINNAME.dkim.query
+ssh zero-carbonio-dmz 'sudo su - zimbra -c "/opt/zimbra/libexec/zmdkimkeyutil -q -d '$DOMAINNAME'"' > ./data/$DOMAINNAME.dkim.query
+
+# remove dkim to domain on Carbonio/Zimbra
+# ssh zero-carbonio-dmz 'sudo su - zextras -c "/opt/zextras/libexec/zmdkimkeyutil -r -d '$DOMAINNAME'"' > ./data/$DOMAINNAME.dkim.public
 
 DKIMFILE="./data/$DOMAINNAME.dkim.query"
 
@@ -60,6 +63,7 @@ DNSRECORD='TXT,'$DKIMSELECTOR'._domainkey.'$DOMAINNAME','"$DKIMSIGNATURE"
 # add dkim record to cloudflare
 # easily add to cloudflare using
 
-./add-dns-record.bash -x -d sandylizardhosting.com -r "'"$DNSRECORD"'"
-
+echo
+echo ./add-dns-record.bash -x -d $DOMAINNAME -r "'"$DNSRECORD"'"
+#./add-dns-record.bash -x -d $DOMAINNAME -r "'"$DNSRECORD"'" &
 echo "# To verify the dkim signature you can run: dig -t txt $DKIMSELECTOR._domainkey.$DOMAINNAME"

@@ -35,6 +35,31 @@ while getopts "hqxd:" option; do
    esac
 done
 
+# # run from cloudflare-bash-scripts
+# domianListFile="data/domains.list"
+# while read domain; do
+#     # echo the commands out so we can run them at will.
+#     #echo "./remove-all-dnsrecords-from-domain.bash -x -d $domain"
+#     echo "./populate-domain-dnsrecords-from-template.bash -x -d $domain"
+#     #echo $domain
+#     #echo "./add-dkim-to-domain-in-zimbra-then-add-to-cloudflare.bash -d $domain "
+#     #echo "ssh zero-zimbra-dmz 'sudo su - zextras -c \"/opt/zextras/libexec/zmdkimkeyutil -r -d $domain\"' > ./data/$domain.dkim.public & "
+
+#     #echo ssh zero-zimbra-dmz 'sudo su - zextras -c "/opt/zextras/libexec/zmdkimkeyutil -r -d '$domain'"' > ./data/$domain.dkim.public
+# done < $domianListFile
+
+# ./populate-domain-dnsrecords-from-template.bash -x -d defiantdecals.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d dizzydelivery.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d meltingsaguaro.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d sandylizardcoffee.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d sandylizardholding.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d sandylizardhosting.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d sandylizardmerch.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d sandylizardventures.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d sleazydecals.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d thesandylizard.com
+# ./populate-domain-dnsrecords-from-template.bash -x -d wonkavisionmedia.com
+
 #get all records for a domain and populate a list
 #cfcli ls -d $DOMAINNAME -f csv | tee data/$DOMAINNAME.dnsrecords.list
 refreshDomainDnsRecords(){

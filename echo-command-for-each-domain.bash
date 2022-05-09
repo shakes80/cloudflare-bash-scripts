@@ -22,7 +22,7 @@ fetchDomainsList(){
 while getopts "hquxc:" option; do
       case $option in
       h) # display Help
-         showHelp
+         showhelp
          exit 1;;
       q) # quiet
          QUIET=true;;

@@ -105,7 +105,7 @@ populateDomainDnsRecordsFromTemplate(){
                 do
                     ((j=j+1))
                     #echo "************** Next Record **************************"
-                    [ "$EXECUTE" = true ] && (./add-dns-record.bash -x -d $DOMAINNAME -r "$dnsRecord" & ) || (./add-dns-record.bash -d $DOMAINNAME -r "$dnsRecord")
+                    [ "$EXECUTE" = true ] && (./add-dns-record.bash -x -d $DOMAINNAME -r "$dnsRecord" ) || (./add-dns-record.bash -d $DOMAINNAME -r "$dnsRecord")
 
                 done < $domainDnsRecordsListTemplate
             else # there are no records in the template

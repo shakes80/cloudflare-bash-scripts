@@ -58,3 +58,4 @@ _type=$(echo $DNSRECORD | cut -d',' -f1)
 # [ "$EXECUTE" = true ] or [ "$EXECUTE" =  ] below
 #
 [ "$EXECUTE" = true ] && cfcli rm $_name -d $_domain -q name:$_name,type:$_type || cfcli find -f csv -d $_domain -q name:$_name,type:$_type
+

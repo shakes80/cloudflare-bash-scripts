@@ -1,6 +1,7 @@
 #!/bin/bash
 # script echos back command with $domain appended
 # TODO: implement a replacement string in COMMAND for alternate placement of $domain
+#sample use: sudo bash ./echo-command-for-each-domain.bash -c "sudo bash ./remove-all-dnsrecords-from-domain.bash -x -d "
 QUIET=false # Not Implemented
 COMMAND="" # initialize COMMAND
 USER="" # initialize USER
